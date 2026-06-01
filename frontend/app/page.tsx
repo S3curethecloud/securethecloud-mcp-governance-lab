@@ -336,8 +336,8 @@ export default function Home() {
             <p style={styles.kicker}>MCP Governance Lab</p>
             <h1 style={styles.title}>SecureTheCloud MCP Governance Lab</h1>
             <p style={styles.subtitle}>
-              Govern Model Context Protocol tool access before AI agents can retrieve sensitive information,
-              invoke enterprise tools, execute workflows, or perform business actions.
+              Simulate governed Model Context Protocol tool access before AI agents can retrieve sensitive information,
+              invoke enterprise-style tools, execute workflows, or perform business actions.
             </p>
           </div>
 
@@ -345,7 +345,7 @@ export default function Home() {
             <strong>Core Principle</strong>
             <span>AI can assist, recommend, and explain.</span>
             <span>AI cannot bypass governance.</span>
-            <span>AI cannot invoke MCP tools without identity, policy, approval, and evidence validation.</span>
+            <span>AI cannot invoke MCP-style tools without identity, policy, approval, and evidence validation.</span>
           </div>
         </header>
 
@@ -361,6 +361,21 @@ export default function Home() {
                 <span>{desc}</span>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section style={styles.demoBoundary}>
+          <div style={styles.boundaryCard}>
+            <strong>Public Demo Boundary</strong>
+            <span>Simulated MCP governance workflow. No real MCP servers, customer records, regulated data, or enterprise systems are connected.</span>
+          </div>
+          <div style={styles.boundaryCard}>
+            <strong>Recruiter / Client Story</strong>
+            <span>Shows identity-aware AI tool governance, policy decisions, approvals, firewall checks, evidence replay, and executive visibility.</span>
+          </div>
+          <div style={styles.boundaryCard}>
+            <strong>Correct Claim</strong>
+            <span>Production-shaped lab, not production enforcement. Demonstrates the control pattern safely and honestly.</span>
           </div>
         </section>
 
@@ -440,7 +455,7 @@ export default function Home() {
                 <div>
                   <strong>{name}</strong>
                   <p>{desc}</p>
-                  <span style={styles.ready}>Phase 6 Ready</span>
+                  <span style={styles.ready}>Demo Ready</span>
                 </div>
               </div>
             ))}
@@ -770,7 +785,7 @@ export default function Home() {
         </section>
 
         <footer style={styles.footer}>
-          MCP gives AI agents access to tools · SecureTheCloud governs those tools before they are used
+          Simulated MCP-style tools demonstrate AI governance · No real enterprise systems or customer data are connected
         </footer>
       </section>
     </main>
@@ -926,6 +941,20 @@ const styles: Record<string, CSSProperties> = {
     gap: 8
   },
   hex: { fontSize: 34 },
+  demoBoundary: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+    gap: 14,
+    marginTop: 18
+  },
+  boundaryCard: {
+    border: "1px solid #22d3ee",
+    borderRadius: 16,
+    padding: 16,
+    background: "rgba(8,47,73,.28)",
+    display: "grid",
+    gap: 8
+  },
   metrics: { display: "grid", gridTemplateColumns: "repeat(6, minmax(0, 1fr))", gap: 14, marginTop: 18 },
   metric: {
     border: "1px solid #334155",

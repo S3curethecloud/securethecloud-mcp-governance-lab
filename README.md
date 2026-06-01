@@ -72,3 +72,36 @@ All lab work is tracked under `docs/phases/`.
 This is a production-shaped lab, not an enterprise-grade authorization system.
 
 It does not provide enterprise IAM, production authorization, real regulated-system access, real customer data processing, SOC 2 certification, production audit assurance, or production enforcement authority.
+
+## Public Demo Positioning
+
+SecureTheCloud MCP Governance Lab is a production-shaped portfolio lab that demonstrates how MCP-style AI tool access can be governed before execution.
+
+This lab is intentionally simulated. It does not connect to real MCP servers, real enterprise systems, real customer data, real regulated data, or production authorization infrastructure.
+
+## Demo Narrative
+
+Model Context Protocol gives AI agents a way to interact with tools.
+
+SecureTheCloud MCP Governance Lab demonstrates a governance pattern for those tool calls:
+
+- capture the request
+- validate identity context
+- classify the data/resource
+- calculate risk tier
+- evaluate policy
+- inspect tool-call firewall decisions
+- require approval for sensitive activity
+- capture evidence
+- replay the decision timeline
+- summarize executive readiness
+
+## Recruiter / Client Demo
+
+Use `docs/DEMO_SCRIPT.md` for the recommended walkthrough.
+
+## Correct Claim
+
+This is a simulated MCP governance lab and production-shaped demo.
+
+It is not production enforcement, real enterprise MCP authorization, SOC 2 certification, or real regulated data processing.
