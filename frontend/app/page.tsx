@@ -334,7 +334,7 @@ export default function Home() {
                 <div>
                   <strong>{name}</strong>
                   <p>{desc}</p>
-                  <span style={styles.ready}>Phase 3 Ready</span>
+                  <span style={styles.ready}>Phase 6 Ready</span>
                 </div>
               </div>
             ))}
@@ -591,7 +591,7 @@ export default function Home() {
             )}
           </div>
 
-          <div style={styles.panel}>
+          <div style={{ ...styles.panel, ...styles.evidenceWide }}>
             <p style={styles.kicker}>Evidence Replay</p>
             <h2 style={styles.panelTitle}>Latest MCP Governance Decisions</h2>
             <p style={styles.muted}>Every request is recorded as governance evidence.</p>
@@ -715,7 +715,7 @@ const styles: Record<string, CSSProperties> = {
     fontFamily: "Inter, Arial, sans-serif",
     padding: 28
   },
-  shell: { maxWidth: 1500, margin: "0 auto" },
+  shell: { maxWidth: 1480, margin: "0 auto" },
   hero: {
     border: "1px solid #334155",
     borderRadius: 24,
@@ -728,7 +728,7 @@ const styles: Record<string, CSSProperties> = {
   },
   brand: { fontSize: 24, fontWeight: 900, color: "#facc15", marginBottom: 18 },
   kicker: { color: "#67e8f9", textTransform: "uppercase", letterSpacing: 2, fontSize: 12, fontWeight: 800 },
-  title: { fontSize: 58, lineHeight: 0.95, margin: "10px 0", fontWeight: 950 },
+  title: { fontSize: 54, lineHeight: 0.95, margin: "10px 0", fontWeight: 950 },
   subtitle: { color: "#cbd5e1", fontSize: 18, maxWidth: 820 },
   doctrine: {
     border: "1px solid #94a3b8",
@@ -750,7 +750,7 @@ const styles: Record<string, CSSProperties> = {
   sectionTitleLeft: { textTransform: "uppercase", letterSpacing: 4, fontSize: 24, margin: "4px 0" },
   sectionSub: { textAlign: "center", color: "#cbd5e1", marginTop: 6 },
   sectionSubLeft: { color: "#cbd5e1", marginTop: 6, maxWidth: 760 },
-  fabricGrid: { display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 16, marginTop: 18 },
+  fabricGrid: { display: "grid", gridTemplateColumns: "repeat(5, minmax(0, 1fr))", gap: 16, marginTop: 18 },
   fabricCard: {
     border: "2px solid",
     borderRadius: 12,
@@ -761,7 +761,7 @@ const styles: Record<string, CSSProperties> = {
     gap: 8
   },
   hex: { fontSize: 34 },
-  metrics: { display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 14, marginTop: 18 },
+  metrics: { display: "grid", gridTemplateColumns: "repeat(6, minmax(0, 1fr))", gap: 14, marginTop: 18 },
   metric: {
     border: "1px solid #334155",
     borderRadius: 18,
@@ -817,9 +817,23 @@ const styles: Record<string, CSSProperties> = {
   },
   workspaceThree: { display: "grid", gridTemplateColumns: "1fr 1fr 1.25fr", gap: 18, marginTop: 18 },
   workspaceFour: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1.2fr", gap: 18, marginTop: 18 },
-  workspaceFive: { display: "grid", gridTemplateColumns: ".9fr 1fr 1fr 1fr 1.2fr", gap: 18, marginTop: 18 },
-  panel: { border: "1px solid #334155", borderRadius: 22, padding: 24, background: "rgba(15,23,42,.86)" },
+  workspaceFive: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+    gap: 18,
+    marginTop: 18,
+    alignItems: "start"
+  },
+  panel: {
+    border: "1px solid #334155",
+    borderRadius: 22,
+    padding: 24,
+    background: "rgba(15,23,42,.86)",
+    minWidth: 0,
+    overflow: "hidden"
+  },
   panelTitle: { fontSize: 26, margin: "8px 0" },
+  evidenceWide: { gridColumn: "span 2" },
   muted: { color: "#cbd5e1" },
   label: { display: "block", marginTop: 12, marginBottom: 5, color: "#cbd5e1", fontSize: 13, fontWeight: 700 },
   input: {
@@ -829,7 +843,8 @@ const styles: Record<string, CSSProperties> = {
     border: "1px solid #475569",
     background: "#020617",
     color: "#eaf2ff",
-    padding: 12
+    padding: 12,
+    minHeight: 42
   },
   button: {
     marginTop: 16,
