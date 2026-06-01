@@ -54,6 +54,24 @@ type Dashboard = {
   governance_coverage: number;
 };
 
+type RiskEvaluation = {
+  risk_tier: string;
+  risk_score: number;
+  risk_factors: string[];
+  protected_data: boolean;
+  action_type: string;
+};
+
+type PolicyPreview = {
+  requested_tool: string;
+  requested_resource: string;
+  data_classification: string;
+  risk_evaluation: RiskEvaluation;
+  policy_result: PolicyResult;
+  evaluated_controls: string[];
+  rule_id: string;
+};
+
 const initialForm = {
   user_identity: "Riley Brooks",
   role: "Support Analyst",
@@ -94,6 +112,7 @@ export default function Home() {
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("Loading MCP governance telemetry...");
   const [lastDecision, setLastDecision] = useState<MCPRequest | null>(null);
+  const [policyPreview, setPolicyPreview] = useState<PolicyPreview | null>(null);
 
   async function loadData() {
     const [toolsRes, requestsRes, dashboardRes] = await Promise.all([
@@ -108,9 +127,31 @@ export default function Home() {
     setStatus("Live backend connected");
   }
 
+  async function loadPolicyPreview() {
+    const res = await fetch(`${API_BASE}/api/policy/preview`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(form)
+    });
+
+    if (res.ok) {
+      setPolicyPreview(await res.json());
+    }
+  }
+
   useEffect(() => {
     loadData().catch((error) => setStatus(`Backend connection failed: ${error.message}`));
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadPolicyPreview().catch(() => undefined);
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [form]);
 
   const selectedTool = useMemo(
     () => tools.find((tool) => tool.name === form.requested_tool),
@@ -364,6 +405,43 @@ export default function Home() {
               <span>Classification: {form.data_classification}</span>
               <span>Approval: {form.approval_status}</span>
             </div>
+
+            {policyPreview && (
+              <>
+                <div style={styles.riskEngine}>
+                  <div style={styles.recordHead}>
+                    <strong>Risk Tiering Engine</strong>
+                    <span style={riskScoreStyle(policyPreview.risk_evaluation.risk_score)}>
+                      {policyPreview.risk_evaluation.risk_score}/100
+                    </span>
+                  </div>
+                  <p>Tier: <b>{policyPreview.risk_evaluation.risk_tier.replaceAll("_", " ")}</b></p>
+                  <p>Action Type: <b>{policyPreview.risk_evaluation.action_type}</b></p>
+                  <p>Protected Data: <b>{policyPreview.risk_evaluation.protected_data ? "yes" : "no"}</b></p>
+                  <ul style={styles.compactList}>
+                    {policyPreview.risk_evaluation.risk_factors.map((factor) => (
+                      <li key={factor}>{factor}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div style={styles.policyEngine}>
+                  <div style={styles.recordHead}>
+                    <strong>Policy Decision Engine</strong>
+                    <span style={decisionStyle(policyPreview.policy_result.decision)}>
+                      {policyPreview.policy_result.decision.toUpperCase()}
+                    </span>
+                  </div>
+                  <p>Rule: <b>{policyPreview.rule_id}</b></p>
+                  <p>{policyPreview.policy_result.reason}</p>
+                  <div style={styles.controlGrid}>
+                    {policyPreview.evaluated_controls.map((control) => (
+                      <span key={control} style={styles.controlPill}>{control}</span>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           <div style={styles.panel}>
@@ -422,6 +500,22 @@ function Input({ label, value, onChange }: { label: string; value: string; onCha
       <input style={styles.input} value={value} onChange={(e) => onChange(e.target.value)} />
     </>
   );
+}
+
+function riskScoreStyle(score: number): CSSProperties {
+  if (score >= 80) {
+    return { ...styles.badge, borderColor: "#ef4444", color: "#fca5a5", background: "rgba(127,29,29,.42)" };
+  }
+
+  if (score >= 50) {
+    return { ...styles.badge, borderColor: "#f59e0b", color: "#fcd34d", background: "rgba(69,26,3,.45)" };
+  }
+
+  if (score >= 20) {
+    return { ...styles.badge, borderColor: "#38bdf8", color: "#bae6fd", background: "rgba(8,47,73,.45)" };
+  }
+
+  return { ...styles.badge, borderColor: "#22c55e", color: "#86efac", background: "rgba(20,83,45,.45)" };
 }
 
 function decisionStyle(decision: string): CSSProperties {
@@ -588,6 +682,39 @@ const styles: Record<string, CSSProperties> = {
     background: "#020617",
     display: "grid",
     gap: 8
+  },
+  riskEngine: {
+    border: "1px solid #f59e0b",
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 18,
+    background: "rgba(69,26,3,.22)"
+  },
+  policyEngine: {
+    border: "1px solid #22d3ee",
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 18,
+    background: "rgba(8,47,73,.35)"
+  },
+  compactList: {
+    marginTop: 10,
+    paddingLeft: 18,
+    color: "#cbd5e1"
+  },
+  controlGrid: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 12
+  },
+  controlPill: {
+    border: "1px solid #334155",
+    borderRadius: 999,
+    padding: "5px 9px",
+    color: "#cbd5e1",
+    fontSize: 11,
+    background: "#020617"
   },
   decisionCard: {
     border: "1px solid #22d3ee",
