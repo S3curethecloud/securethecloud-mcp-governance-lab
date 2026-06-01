@@ -74,3 +74,24 @@ curl -fsS -X POST http://localhost:8000/api/demo/reset \
   -H "X-Demo-Reset-Token: local-demo-reset"
 echo
 echo "Demo reset endpoint ok"
+
+echo "Checking mock MCP execution adapter..."
+curl -fsS -X POST http://localhost:8000/api/mcp/execute \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_identity": "Riley Brooks",
+    "role": "Support Analyst",
+    "department": "Customer Operations",
+    "business_unit": "Customer Trust",
+    "clearance_level": 4,
+    "agent_identity": "securethecloud-demo-agent",
+    "service_identity": "mcp-lab-service",
+    "environment_context": "demo",
+    "business_purpose": "Resolve customer escalation with governed MCP access",
+    "requested_tool": "read_customer_record",
+    "requested_resource": "customer profile",
+    "data_classification": "restricted",
+    "approval_status": "not_requested"
+  }'
+echo
+echo "Mock MCP execution endpoint ok"
