@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { CSSProperties, FormEvent } from "react";
+import type { CSSProperties } from "react";
 
 const API_BASE = "http://localhost:8000";
 
@@ -54,22 +54,6 @@ type Dashboard = {
   governance_coverage: number;
 };
 
-const initialForm = {
-  user_identity: "Riley Brooks",
-  role: "Support Analyst",
-  department: "Customer Operations",
-  business_unit: "Customer Trust",
-  clearance_level: 3,
-  agent_identity: "securethecloud-demo-agent",
-  service_identity: "mcp-lab-service",
-  environment_context: "demo",
-  business_purpose: "Resolve customer escalation with governed MCP access",
-  requested_tool: "read_customer_record",
-  requested_resource: "customer profile",
-  data_classification: "restricted",
-  approval_status: "not_requested"
-};
-
 const fabricModules = [
   ["Governance & Policy", "Identity-aware MCP policy evaluation", "#22d3ee"],
   ["Evidence & Audit", "Replayable decision records for every MCP request", "#6ee75f"],
@@ -91,9 +75,7 @@ export default function Home() {
   const [tools, setTools] = useState<MCPTool[]>([]);
   const [requests, setRequests] = useState<MCPRequest[]>([]);
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
-  const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("Loading MCP governance telemetry...");
-  const [lastDecision, setLastDecision] = useState<MCPRequest | null>(null);
 
   async function loadData() {
     const [toolsRes, requestsRes, dashboardRes] = await Promise.all([
@@ -112,11 +94,6 @@ export default function Home() {
     loadData().catch((error) => setStatus(`Backend connection failed: ${error.message}`));
   }, []);
 
-  const selectedTool = useMemo(
-    () => tools.find((tool) => tool.name === form.requested_tool),
-    [tools, form.requested_tool]
-  );
-
   const executivePosture = useMemo(() => {
     if (!dashboard) {
       return "Loading";
@@ -132,31 +109,6 @@ export default function Home() {
 
     return "Demo Ready";
   }, [dashboard]);
-
-  async function submitRequest(event: FormEvent) {
-    event.preventDefault();
-
-    setStatus("Submitting governed MCP request...");
-
-    const res = await fetch(`${API_BASE}/api/mcp/requests`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(form)
-    });
-
-    if (!res.ok) {
-      setStatus(`MCP request failed: ${res.status}`);
-      return;
-    }
-
-    const created: MCPRequest = await res.json();
-    setLastDecision(created);
-    setStatus(`Decision recorded: ${created.policy_result.decision.toUpperCase()} / ${created.policy_result.risk_tier.replaceAll("_", " ").toUpperCase()}`);
-
-    await loadData();
-  }
 
   return (
     <main style={styles.page}>
@@ -232,144 +184,37 @@ export default function Home() {
                 <div>
                   <strong>{name}</strong>
                   <p>{desc}</p>
-                  <span style={styles.ready}>Phase 3 Ready</span>
+                  <span style={styles.ready}>Phase 2 Ready</span>
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        <section style={styles.workspaceThree}>
-          <form onSubmit={submitRequest} style={styles.panel}>
-            <p style={styles.kicker}>Phase 3</p>
-            <h2 style={styles.panelTitle}>MCP Access Request Portal</h2>
-            <p style={styles.muted}>
-              Submit a governed MCP tool request with identity, business purpose, classification, and approval context.
-            </p>
-
-            <Input label="User Identity" value={form.user_identity} onChange={(v) => setForm({ ...form, user_identity: v })} />
-            <Input label="Role" value={form.role} onChange={(v) => setForm({ ...form, role: v })} />
-            <Input label="Department" value={form.department} onChange={(v) => setForm({ ...form, department: v })} />
-            <Input label="Business Unit" value={form.business_unit} onChange={(v) => setForm({ ...form, business_unit: v })} />
-
-            <label style={styles.label}>Clearance Level</label>
-            <select
-              style={styles.input}
-              value={form.clearance_level}
-              onChange={(e) => setForm({ ...form, clearance_level: Number(e.target.value) })}
-            >
-              <option value={0}>0 - No clearance</option>
-              <option value={1}>1 - Basic</option>
-              <option value={2}>2 - Internal</option>
-              <option value={3}>3 - Confidential</option>
-              <option value={4}>4 - Restricted</option>
-              <option value={5}>5 - Regulated/Admin</option>
-            </select>
-
-            <Input label="Agent Identity" value={form.agent_identity} onChange={(v) => setForm({ ...form, agent_identity: v })} />
-            <Input label="Service Identity" value={form.service_identity} onChange={(v) => setForm({ ...form, service_identity: v })} />
-
-            <label style={styles.label}>Environment Context</label>
-            <select
-              style={styles.input}
-              value={form.environment_context}
-              onChange={(e) => setForm({ ...form, environment_context: e.target.value })}
-            >
-              <option value="demo">demo</option>
-              <option value="staging">staging</option>
-              <option value="approved_lab">approved_lab</option>
-              <option value="unknown">unknown</option>
-              <option value="production">production</option>
-            </select>
-
-            <label style={styles.label}>Requested MCP Tool</label>
-            <select
-              style={styles.input}
-              value={form.requested_tool}
-              onChange={(e) => setForm({ ...form, requested_tool: e.target.value })}
-            >
-              {tools.map((tool) => (
-                <option key={tool.name} value={tool.name}>
-                  {tool.name}
-                </option>
-              ))}
-            </select>
-
-            <Input label="Requested Resource" value={form.requested_resource} onChange={(v) => setForm({ ...form, requested_resource: v })} />
-
-            <label style={styles.label}>Data Classification</label>
-            <select
-              style={styles.input}
-              value={form.data_classification}
-              onChange={(e) => setForm({ ...form, data_classification: e.target.value })}
-            >
-              <option value="public">public</option>
-              <option value="internal">internal</option>
-              <option value="confidential">confidential</option>
-              <option value="restricted">restricted</option>
-              <option value="regulated">regulated</option>
-            </select>
-
-            <label style={styles.label}>Approval Status</label>
-            <select
-              style={styles.input}
-              value={form.approval_status}
-              onChange={(e) => setForm({ ...form, approval_status: e.target.value })}
-            >
-              <option value="not_requested">not_requested</option>
-              <option value="approved">approved</option>
-              <option value="rejected">rejected</option>
-              <option value="escalated">escalated</option>
-            </select>
-
-            <label style={styles.label}>Business Purpose</label>
-            <textarea
-              style={{ ...styles.input, minHeight: 90 }}
-              value={form.business_purpose}
-              onChange={(e) => setForm({ ...form, business_purpose: e.target.value })}
-            />
-
-            <button style={styles.button}>Submit Governed MCP Request</button>
-
-            {lastDecision && (
-              <div style={styles.decisionCard}>
-                <span>Latest Decision</span>
-                <strong>{lastDecision.policy_result.decision.toUpperCase()}</strong>
-                <small>{lastDecision.policy_result.reason}</small>
-              </div>
-            )}
-          </form>
-
+        <section style={styles.workspace}>
           <div style={styles.panel}>
             <p style={styles.kicker}>MCP Server Layer</p>
-            <h2 style={styles.panelTitle}>Selected Tool Context</h2>
-            <p style={styles.muted}>The selected MCP tool is evaluated before execution is permitted.</p>
+            <h2 style={styles.panelTitle}>Governed MCP Tools</h2>
+            <p style={styles.muted}>V1 enterprise-style MCP tools exposed for governed demo requests.</p>
 
-            {selectedTool && (
-              <div style={styles.selectedTool}>
-                <strong>{selectedTool.name}</strong>
-                <p>{selectedTool.description}</p>
-                <p>Sensitivity: <b>{selectedTool.sensitivity}</b></p>
-                <p>Default risk: <b>{selectedTool.default_risk_tier.replaceAll("_", " ")}</b></p>
-              </div>
-            )}
-
-            <div style={styles.policyPreview}>
-              <strong>Governance Evaluation Inputs</strong>
-              <span>User: {form.user_identity}</span>
-              <span>Role: {form.role}</span>
-              <span>Clearance: {form.clearance_level}</span>
-              <span>Tool: {form.requested_tool}</span>
-              <span>Resource: {form.requested_resource}</span>
-              <span>Classification: {form.data_classification}</span>
-              <span>Approval: {form.approval_status}</span>
+            <div style={styles.feed}>
+              {tools.map((tool) => (
+                <article key={tool.name} style={styles.record}>
+                  <div style={styles.recordHead}>
+                    <strong>{tool.name}</strong>
+                    <span style={styles.badge}>{tool.default_risk_tier.replaceAll("_", " ").toUpperCase()}</span>
+                  </div>
+                  <p>{tool.description}</p>
+                  <p>Sensitivity: <b>{tool.sensitivity}</b></p>
+                </article>
+              ))}
             </div>
           </div>
 
           <div style={styles.panel}>
-            <p style={styles.kicker}>Evidence Replay</p>
-            <h2 style={styles.panelTitle}>Latest MCP Governance Decisions</h2>
-            <p style={styles.muted}>Every request is recorded as governance evidence.</p>
+            <p style={styles.kicker}>Evidence Preview</p>
+            <h2 style={styles.panelTitle}>Seeded Governance Decisions</h2>
+            <p style={styles.muted}>Live evidence records from the Phase 1 backend.</p>
 
             <div style={styles.feed}>
               {requests.map((request) => (
@@ -387,9 +232,6 @@ export default function Home() {
                   <p>{request.user_identity} · {request.role} · {request.department}</p>
                   <p>
                     Resource: <b>{request.requested_resource}</b> · Classification: <b>{request.data_classification}</b>
-                  </p>
-                  <p>
-                    Risk: <b>{request.policy_result.risk_tier.replaceAll("_", " ")}</b>
                   </p>
                   <p>{request.policy_result.reason}</p>
                 </article>
@@ -412,15 +254,6 @@ function Metric({ label, value }: { label: string; value: number | string }) {
       <strong>{value}</strong>
       <span>{label}</span>
     </div>
-  );
-}
-
-function Input({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
-  return (
-    <>
-      <label style={styles.label}>{label}</label>
-      <input style={styles.input} value={value} onChange={(e) => onChange(e.target.value)} />
-    </>
   );
 }
 
@@ -448,7 +281,7 @@ const styles: Record<string, CSSProperties> = {
     fontFamily: "Inter, Arial, sans-serif",
     padding: 28
   },
-  shell: { maxWidth: 1500, margin: "0 auto" },
+  shell: { maxWidth: 1440, margin: "0 auto" },
   hero: {
     border: "1px solid #334155",
     borderRadius: 24,
@@ -548,56 +381,10 @@ const styles: Record<string, CSSProperties> = {
     padding: "4px 12px",
     fontSize: 12
   },
-  workspaceThree: { display: "grid", gridTemplateColumns: "1fr 1fr 1.25fr", gap: 18, marginTop: 18 },
+  workspace: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginTop: 18 },
   panel: { border: "1px solid #334155", borderRadius: 22, padding: 24, background: "rgba(15,23,42,.86)" },
   panelTitle: { fontSize: 26, margin: "8px 0" },
   muted: { color: "#cbd5e1" },
-  label: { display: "block", marginTop: 12, marginBottom: 5, color: "#cbd5e1", fontSize: 13, fontWeight: 700 },
-  input: {
-    width: "100%",
-    boxSizing: "border-box",
-    borderRadius: 12,
-    border: "1px solid #475569",
-    background: "#020617",
-    color: "#eaf2ff",
-    padding: 12
-  },
-  button: {
-    marginTop: 16,
-    width: "100%",
-    border: 0,
-    borderRadius: 12,
-    background: "#22d3ee",
-    color: "#020617",
-    padding: 14,
-    fontWeight: 900,
-    cursor: "pointer"
-  },
-  selectedTool: {
-    border: "1px solid #22d3ee",
-    borderRadius: 16,
-    padding: 16,
-    marginTop: 18,
-    background: "#020617"
-  },
-  policyPreview: {
-    border: "1px solid #334155",
-    borderRadius: 16,
-    padding: 16,
-    marginTop: 18,
-    background: "#020617",
-    display: "grid",
-    gap: 8
-  },
-  decisionCard: {
-    border: "1px solid #22d3ee",
-    borderRadius: 16,
-    padding: 16,
-    marginTop: 18,
-    background: "rgba(8,47,73,.45)",
-    display: "grid",
-    gap: 8
-  },
   feed: { display: "grid", gap: 14, marginTop: 18 },
   record: { border: "1px solid #334155", borderRadius: 16, padding: 16, background: "#020617" },
   recordHead: { display: "flex", justifyContent: "space-between", gap: 12, alignItems: "start" },
