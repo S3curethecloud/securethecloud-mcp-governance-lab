@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from enum import Enum
-from typing import List
+from typing import List, Literal
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException
@@ -86,6 +86,14 @@ class PolicyPreview(BaseModel):
     risk_evaluation: RiskEvaluation
     policy_result: PolicyResult
     evaluated_controls: List[str]
+    rule_id: str
+
+
+class MCPToolFirewallDecision(BaseModel):
+    tool: MCPTool
+    status: Literal["allowed", "blocked", "requires_approval", "redacted", "escalated"]
+    risk_tier: RiskTier
+    reason: str
     rule_id: str
 
 
@@ -315,6 +323,42 @@ def build_policy_preview(request: MCPRequestCreate) -> PolicyPreview:
     )
 
 
+def firewall_status_for(result: PolicyResult) -> Literal["allowed", "blocked", "requires_approval", "redacted", "escalated"]:
+    if result.decision == Decision.allow:
+        return "allowed"
+
+    if result.decision == Decision.deny:
+        return "blocked"
+
+    if result.decision == Decision.approval_required:
+        return "requires_approval"
+
+    if result.decision == Decision.redact:
+        return "redacted"
+
+    return "escalated"
+
+
+def evaluate_mcp_firewall(request: MCPRequestCreate) -> list[MCPToolFirewallDecision]:
+    decisions: list[MCPToolFirewallDecision] = []
+
+    for tool in MCPTool:
+        tool_request = request.model_copy(update={"requested_tool": tool})
+        result = evaluate_policy(tool_request)
+
+        decisions.append(
+            MCPToolFirewallDecision(
+                tool=tool,
+                status=firewall_status_for(result),
+                risk_tier=result.risk_tier,
+                reason=result.reason,
+                rule_id=policy_rule_id(tool_request, result),
+            )
+        )
+
+    return decisions
+
+
 def evaluate_policy(request: MCPRequestCreate) -> PolicyResult:
     risk = calculate_risk(request)
 
@@ -507,6 +551,11 @@ def mcp_tools():
 @app.post("/api/policy/preview", response_model=PolicyPreview)
 def policy_preview(request: MCPRequestCreate):
     return build_policy_preview(request)
+
+
+@app.post("/api/mcp/firewall/preview", response_model=list[MCPToolFirewallDecision])
+def mcp_firewall_preview(request: MCPRequestCreate):
+    return evaluate_mcp_firewall(request)
 
 
 @app.get("/api/mcp/requests", response_model=list[MCPRequestRecord])
