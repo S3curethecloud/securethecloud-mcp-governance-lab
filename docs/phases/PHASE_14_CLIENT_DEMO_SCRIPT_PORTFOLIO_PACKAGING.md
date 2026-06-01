@@ -1,21 +1,21 @@
-# Phase 14 — Recruiter Demo Script & Portfolio Packaging
+# Phase 14 — Client Demo Script & Portfolio Packaging
 
 Status: Implementation Complete
 
 ## Goal
 
-Package the SecureTheCloud MCP Governance Lab so recruiters, clients, and portfolio reviewers can quickly understand the value, scope, architecture, and correct claims.
+Package the SecureTheCloud MCP Governance Lab so clients and portfolio reviewers can quickly understand the value, scope, architecture, and correct claims.
 
 ## Implemented
 
-- Recruiter demo script
+- Client demo script
 - One-page walkthrough
 - Architecture summary
 - Correct claim / incorrect claim document
 - Why this matters document
 - GitHub release notes
 - Portfolio screenshot guide
-- README recruiter walkthrough section
+- README client walkthrough section
 
 ## Public Demo
 

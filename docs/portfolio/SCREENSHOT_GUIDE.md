@@ -1,6 +1,6 @@
 # Portfolio Screenshot Guide
 
-Use these screenshots for portfolio or recruiter walkthroughs.
+Use these screenshots for portfolio or client walkthroughs.
 
 ## Recommended Screenshots
 

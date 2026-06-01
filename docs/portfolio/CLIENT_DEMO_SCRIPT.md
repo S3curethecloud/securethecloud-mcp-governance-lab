@@ -1,4 +1,4 @@
-# SecureTheCloud MCP Governance Lab — Recruiter Demo Script
+# SecureTheCloud MCP Governance Lab — Client Demo Script
 
 ## Demo URL
 

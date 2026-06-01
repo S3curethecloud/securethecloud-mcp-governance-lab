@@ -13,7 +13,7 @@ Use these claims when describing the project:
 - The lab shows human approval before sensitive tool execution.
 - The lab shows evidence replay and executive visibility.
 - The lab includes a mock MCP execution adapter.
-- The lab is suitable for recruiter, portfolio, and client-style demonstrations.
+- The lab is suitable for client and portfolio demonstrations.
 
 ## Incorrect Claims
 

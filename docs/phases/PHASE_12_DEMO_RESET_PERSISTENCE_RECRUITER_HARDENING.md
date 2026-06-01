@@ -1,10 +1,10 @@
-# Phase 12 — Demo Reset, Persistence, and Recruiter Hardening
+# Phase 12 — Demo Reset, Persistence, and Client Hardening
 
 Status: Implementation Complete
 
 ## Goal
 
-Harden the public MCP Governance Lab for recruiter/client demos by adding protected seeded reset, CORS tightening, public demo documentation, health checklist, and release tagging.
+Harden the public MCP Governance Lab for client demos by adding protected seeded reset, CORS tightening, public demo documentation, health checklist, and release tagging.
 
 ## Implemented
 
@@ -16,7 +16,7 @@ Harden the public MCP Governance Lab for recruiter/client demos by adding protec
 - Backend CORS origin configuration
 - Fly backend CORS configuration
 - Local smoke test reset verification
-- Recruiter demo hardening documentation
+- Client demo hardening documentation
 
 ## Endpoint Added
 
@@ -33,7 +33,7 @@ The token is supplied through runtime environment configuration and must not be 
 
 Persistence Note
 
-The current public lab uses deterministic seeded demo state. It is intentionally lightweight for recruiter/client demo use. Managed database persistence can be added in a later phase if the lab needs durable multi-session state.
+The current public lab uses deterministic seeded demo state. It is intentionally lightweight for client demo use. Managed database persistence can be added in a later phase if the lab needs durable multi-session state.
 
 Boundary
 

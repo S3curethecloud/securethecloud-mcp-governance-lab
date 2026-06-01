@@ -96,7 +96,7 @@ SecureTheCloud MCP Governance Lab demonstrates a governance pattern for those to
 - replay the decision timeline
 - summarize executive readiness
 
-## Recruiter / Client Demo
+## Client Demo
 
 Use `docs/DEMO_SCRIPT.md` for the recommended walkthrough.
 
@@ -129,7 +129,7 @@ curl -X POST https://securethecloud-mcp-governance-lab-api.fly.dev/api/demo/rese
 
 Never commit the reset token.
 
-## Recruiter / Client Walkthrough
+## Client Walkthrough
 
 Public demo:
 
@@ -159,7 +159,7 @@ Important Boundary
 This is a simulated public demo. It does not connect to real MCP servers, customer records, regulated data, or enterprise systems.
 
 Supporting Docs
-docs/portfolio/RECRUITER_DEMO_SCRIPT.md
+docs/portfolio/CLIENT_DEMO_SCRIPT.md
 docs/portfolio/ARCHITECTURE_SUMMARY.md
 docs/portfolio/CORRECT_CLAIMS.md
 docs/portfolio/WHY_THIS_MATTERS.md

@@ -410,7 +410,7 @@ export default function Home() {
             <span>Simulated MCP governance workflow. No real MCP servers, customer records, regulated data, or enterprise systems are connected.</span>
           </div>
           <div style={styles.boundaryCard}>
-            <strong>Recruiter / Client Story</strong>
+            <strong>Client Story</strong>
             <span>Shows identity-aware AI tool governance, policy decisions, approvals, firewall checks, evidence replay, and executive visibility.</span>
           </div>
           <div style={styles.boundaryCard}>
@@ -488,7 +488,7 @@ export default function Home() {
 
         <section style={styles.demoOps}>
           <div>
-            <p style={styles.kicker}>Phase 12 · Recruiter Demo Hardening</p>
+            <p style={styles.kicker}>Phase 12 · Client Demo Hardening</p>
             <h2 style={styles.sectionTitleLeft}>Demo Operations</h2>
             <p style={styles.sectionSubLeft}>
               Restore the seeded demo state before interviews or client walkthroughs. The reset requires an owner token and does not expose real data.
