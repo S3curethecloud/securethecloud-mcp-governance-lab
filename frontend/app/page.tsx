@@ -706,7 +706,10 @@ export default function Home() {
                       {policyPreview.policy_result.decision.toUpperCase()}
                     </span>
                   </div>
-                  <p>Rule: <b>{policyPreview.rule_id}</b></p>
+                  <p style={styles.ruleLine}>
+                    Rule:<br />
+                    <b style={styles.breakAnywhere}>{policyPreview.rule_id}</b>
+                  </p>
                   <p>{policyPreview.policy_result.reason}</p>
                   <div style={styles.controlGrid}>
                     {policyPreview.evaluated_controls.map((control) => (
@@ -1239,7 +1242,18 @@ const styles: Record<string, CSSProperties> = {
     borderRadius: 16,
     padding: 16,
     marginTop: 18,
-    background: "rgba(8,47,73,.35)"
+    background: "rgba(8,47,73,.35)",
+    minWidth: 0,
+    overflow: "hidden"
+  },
+  ruleLine: {
+    minWidth: 0,
+    overflowWrap: "anywhere",
+    wordBreak: "break-word"
+  },
+  breakAnywhere: {
+    overflowWrap: "anywhere",
+    wordBreak: "break-word"
   },
   compactList: {
     marginTop: 10,
