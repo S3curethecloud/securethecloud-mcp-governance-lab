@@ -128,3 +128,40 @@ curl -X POST https://securethecloud-mcp-governance-lab-api.fly.dev/api/demo/rese
   -H "X-Demo-Reset-Token: $DEMO_RESET_TOKEN"
 
 Never commit the reset token.
+
+## Recruiter / Client Walkthrough
+
+Public demo:
+
+```text
+https://securethecloud-mcp-governance-lab.fly.dev
+
+This lab demonstrates a simulated governance control plane for MCP-style AI tool access.
+
+What to Look For
+Public demo boundary and correct claim
+Shared trust fabric
+Executive risk and control dashboard
+MCP access request portal
+Tool-call firewall decisions
+Human approval workflow
+Evidence replay timeline
+Mock MCP execution adapter
+Protected seeded demo reset
+Core Story
+
+AI can assist, recommend, and explain.
+
+AI cannot invoke MCP-style tools until identity, policy, approval, firewall, and evidence checks pass.
+
+Important Boundary
+
+This is a simulated public demo. It does not connect to real MCP servers, customer records, regulated data, or enterprise systems.
+
+Supporting Docs
+docs/portfolio/RECRUITER_DEMO_SCRIPT.md
+docs/portfolio/ARCHITECTURE_SUMMARY.md
+docs/portfolio/CORRECT_CLAIMS.md
+docs/portfolio/WHY_THIS_MATTERS.md
+docs/portfolio/SCREENSHOT_GUIDE.md
+docs/releases/v0.13.0-mock-mcp-execution-adapter.md
