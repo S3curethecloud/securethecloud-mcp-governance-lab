@@ -5,6 +5,8 @@ services:
       - "8000:8000"
     environment:
       - LAB_MODE=true
+      - DEMO_RESET_TOKEN=local-demo-reset
+      - CORS_ORIGINS=http://localhost:3000,https://securethecloud-mcp-governance-lab.fly.dev
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3).read()"]
       interval: 10s

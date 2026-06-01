@@ -176,6 +176,8 @@ export default function Home() {
   const [evidenceTimeline, setEvidenceTimeline] = useState<EvidenceTimeline | null>(null);
   const [selectedEvidenceId, setSelectedEvidenceId] = useState<string | null>(null);
   const [reviewer, setReviewer] = useState("Compliance Officer");
+  const [demoResetToken, setDemoResetToken] = useState("");
+  const [demoResetStatus, setDemoResetStatus] = useState("Owner reset token required.");
 
   async function loadData() {
     const [toolsRes, requestsRes, dashboardRes, executiveRes] = await Promise.all([
@@ -193,7 +195,10 @@ export default function Home() {
     setExecutiveSummary(await executiveRes.json());
     setStatus("Live backend connected");
 
-    const nextEvidenceId = selectedEvidenceId ?? nextRequests[0]?.request_id;
+    const nextEvidenceId = nextRequests.some((request) => request.request_id === selectedEvidenceId)
+      ? selectedEvidenceId
+      : nextRequests[0]?.request_id;
+
     if (nextEvidenceId) {
       setSelectedEvidenceId(nextEvidenceId);
       loadEvidenceTimeline(nextEvidenceId).catch(() => undefined);
@@ -333,6 +338,35 @@ export default function Home() {
     await loadData();
   }
 
+  async function resetDemo() {
+    if (!demoResetToken.trim()) {
+      setDemoResetStatus("Enter the owner reset token first.");
+      return;
+    }
+
+    setDemoResetStatus("Resetting seeded demo records...");
+
+    const res = await fetch(`${API_BASE}/api/demo/reset`, {
+      method: "POST",
+      headers: {
+        "X-Demo-Reset-Token": demoResetToken.trim()
+      }
+    });
+
+    if (!res.ok) {
+      setDemoResetStatus(`Reset failed: ${res.status}`);
+      return;
+    }
+
+    const result = await res.json();
+    setDemoResetToken("");
+    setSelectedEvidenceId(null);
+    setEvidenceTimeline(null);
+    setDemoResetStatus(`${result.message}. Records restored: ${result.reset_records}`);
+
+    await loadData();
+  }
+
   return (
     <main style={styles.page}>
       <section style={styles.shell}>
@@ -451,6 +485,31 @@ export default function Home() {
             </div>
           </section>
         )}
+
+        <section style={styles.demoOps}>
+          <div>
+            <p style={styles.kicker}>Phase 12 · Recruiter Demo Hardening</p>
+            <h2 style={styles.sectionTitleLeft}>Demo Operations</h2>
+            <p style={styles.sectionSubLeft}>
+              Restore the seeded demo state before interviews or client walkthroughs. The reset requires an owner token and does not expose real data.
+            </p>
+          </div>
+
+          <div style={styles.demoResetCard}>
+            <strong>Protected Demo Reset</strong>
+            <input
+              style={styles.input}
+              type="password"
+              value={demoResetToken}
+              placeholder="Owner reset token"
+              onChange={(e) => setDemoResetToken(e.target.value)}
+            />
+            <button type="button" style={styles.button} onClick={resetDemo}>
+              Restore Seeded Demo
+            </button>
+            <small>{demoResetStatus}</small>
+          </div>
+        </section>
 
         <section style={styles.layerSection}>
           <h2 style={styles.sectionTitle}>Platform Layers</h2>
@@ -1027,6 +1086,25 @@ const styles: Record<string, CSSProperties> = {
     height: "100%",
     borderRadius: 999,
     background: "#22d3ee"
+  },
+  demoOps: {
+    marginTop: 18,
+    border: "1px solid #22d3ee",
+    borderRadius: 22,
+    padding: 22,
+    background: "rgba(8,47,73,.28)",
+    display: "grid",
+    gridTemplateColumns: "1.5fr 1fr",
+    gap: 18,
+    alignItems: "center"
+  },
+  demoResetCard: {
+    border: "1px solid #334155",
+    borderRadius: 16,
+    padding: 16,
+    background: "rgba(2,6,23,.78)",
+    display: "grid",
+    gap: 10
   },
   layerSection: {
     marginTop: 18,

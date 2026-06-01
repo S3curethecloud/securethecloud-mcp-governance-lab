@@ -1,9 +1,10 @@
+import os
 from datetime import datetime, timezone
 from enum import Enum
 from typing import List, Literal
 from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -118,6 +119,13 @@ class EvidenceTimeline(BaseModel):
     steps: List[EvidenceTimelineStep]
 
 
+
+class DemoResetResult(BaseModel):
+    status: str
+    reset_records: int
+    message: str
+
+
 class MCPRequestRecord(MCPRequestCreate):
     request_id: str
     created_at: datetime
@@ -176,6 +184,20 @@ class Health(BaseModel):
 app = FastAPI(
     title="SecureTheCloud MCP Governance Lab API",
     version="0.1.0",
+)
+
+CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+    if origin.strip()
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ORIGINS,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PATCH", "OPTIONS"],
+    allow_headers=["Content-Type", "X-Demo-Reset-Token"],
 )
 
 app.add_middleware(
@@ -773,6 +795,27 @@ def review_mcp_request(request_id: str, action: ApprovalAction):
         return updated
 
     raise HTTPException(status_code=404, detail="MCP request not found")
+
+
+@app.post("/api/demo/reset", response_model=DemoResetResult)
+def demo_reset(request: Request):
+    expected_token = os.getenv("DEMO_RESET_TOKEN")
+    provided_token = request.headers.get("X-Demo-Reset-Token")
+
+    if not expected_token:
+        raise HTTPException(status_code=403, detail="Demo reset token is not configured")
+
+    if provided_token != expected_token:
+        raise HTTPException(status_code=403, detail="Invalid demo reset token")
+
+    REQUESTS.clear()
+    seed()
+
+    return DemoResetResult(
+        status="reset",
+        reset_records=len(REQUESTS),
+        message="Seeded MCP governance demo records restored",
+    )
 
 
 @app.get("/api/dashboard", response_model=DashboardSummary)

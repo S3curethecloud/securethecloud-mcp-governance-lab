@@ -7,6 +7,7 @@ primary_region = "iad"
 [env]
   LAB_MODE = "true"
   PORT = "8000"
+  CORS_ORIGINS = "https://securethecloud-mcp-governance-lab.fly.dev"
 
 [http_service]
   internal_port = 8000

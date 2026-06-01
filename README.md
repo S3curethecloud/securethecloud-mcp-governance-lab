@@ -105,3 +105,26 @@ Use `docs/DEMO_SCRIPT.md` for the recommended walkthrough.
 This is a simulated MCP governance lab and production-shaped demo.
 
 It is not production enforcement, real enterprise MCP authorization, SOC 2 certification, or real regulated data processing.
+
+## Public Demo Links
+
+Frontend:
+
+```text
+https://securethecloud-mcp-governance-lab.fly.dev
+
+Backend health:
+
+https://securethecloud-mcp-governance-lab-api.fly.dev/health
+
+Backend executive summary:
+
+https://securethecloud-mcp-governance-lab-api.fly.dev/api/executive/summary
+Demo Reset
+
+The public demo can be restored to seeded records with the protected reset endpoint:
+
+curl -X POST https://securethecloud-mcp-governance-lab-api.fly.dev/api/demo/reset \
+  -H "X-Demo-Reset-Token: $DEMO_RESET_TOKEN"
+
+Never commit the reset token.

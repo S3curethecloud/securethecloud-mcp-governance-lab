@@ -68,3 +68,9 @@ curl -fsSI http://localhost:3000 >/dev/null
 echo "Frontend endpoint ok"
 
 echo "Smoke test complete."
+
+echo "Checking protected demo reset..."
+curl -fsS -X POST http://localhost:8000/api/demo/reset \
+  -H "X-Demo-Reset-Token: local-demo-reset"
+echo
+echo "Demo reset endpoint ok"
