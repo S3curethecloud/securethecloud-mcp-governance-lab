@@ -191,3 +191,29 @@ docs/client/GITHUB_SHARE_SECTION.md
 docs/client/SCREENSHOT_CHECKLIST.md
 docs/client/CUSTOM_DOMAIN_PREP.md
 docs/releases/v0.15.0-client-share-kit.md
+
+## Public Demo Kill Switch
+
+The public Fly.io demo can be turned off, turned back on, or permanently deleted while preserving the local Docker workflow.
+
+Temporary public shutdown:
+
+```bash
+./scripts/fly_demo_control.sh off
+
+Turn public demo back on:
+
+./scripts/fly_demo_control.sh on
+
+Run locally:
+
+./scripts/fly_demo_control.sh local-up
+
+Permanent Fly app deletion:
+
+CONFIRM_DESTROY=I_UNDERSTAND_DELETE_PUBLIC_DEMO ./scripts/fly_demo_control.sh destroy
+
+See:
+
+docs/ops/FLY_DEMO_KILL_SWITCH.md
+
