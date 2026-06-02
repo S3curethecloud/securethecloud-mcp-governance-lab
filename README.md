@@ -165,3 +165,29 @@ docs/portfolio/CORRECT_CLAIMS.md
 docs/portfolio/WHY_THIS_MATTERS.md
 docs/portfolio/SCREENSHOT_GUIDE.md
 docs/releases/v0.13.0-mock-mcp-execution-adapter.md
+
+## Client Share Kit
+
+Public demo:
+
+```text
+https://securethecloud-mcp-governance-lab.fly.dev
+Client-Safe Summary
+
+SecureTheCloud MCP Governance Lab is a simulated AI governance control plane for MCP-style tool access.
+
+It demonstrates how identity context, data classification, risk tiering, policy decisions, tool-call firewalling, human approval, evidence replay, and mock execution can work together before AI agents are allowed to invoke enterprise-style tools.
+
+Correct Claim
+
+This is a production-shaped simulated governance lab.
+
+It does not connect to real MCP servers, customer records, regulated data, production authorization systems, or enterprise infrastructure.
+
+Shareable Docs
+docs/client/CLIENT_SHARE_KIT.md
+docs/client/ONE_PAGE_DEMO_WALKTHROUGH.md
+docs/client/GITHUB_SHARE_SECTION.md
+docs/client/SCREENSHOT_CHECKLIST.md
+docs/client/CUSTOM_DOMAIN_PREP.md
+docs/releases/v0.15.0-client-share-kit.md
