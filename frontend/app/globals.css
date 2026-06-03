@@ -232,3 +232,111 @@ code {
     border-radius: 18px !important;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* Phase 15C — Deep Mobile Layout Overflow Fix                                */
+/* Ensures lower workflow sections stack instead of preserving desktop columns. */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  /*
+    Some lower MCP workflow sections use inline grid/flex styles.
+    The first mobile pass fixed the hero, but nested phase panels can still
+    squeeze into desktop columns. Force all mobile grid/flex children to span
+    full width.
+  */
+
+  *[style*="display: grid"],
+  *[style*="display:grid"],
+  *[style*="grid-template-columns"] {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  *[style*="display: grid"] > *,
+  *[style*="display:grid"] > *,
+  *[style*="grid-template-columns"] > * {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  *[style*="display: flex"],
+  *[style*="display:flex"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  *[style*="display: flex"] > *,
+  *[style*="display:flex"] > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  /*
+    Prevent long button labels, chips, tool names, evidence values, and request
+    text from forcing horizontal scroll.
+  */
+  button,
+  input,
+  select,
+  textarea,
+  pre,
+  code,
+  p,
+  li,
+  span,
+  strong,
+  label,
+  div {
+    overflow-wrap: anywhere !important;
+  }
+
+  /*
+    Keep cards readable at the bottom of the page where dense governance,
+    firewall, approval, and execution panels live.
+  */
+  article,
+  section,
+  form,
+  fieldset {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  /*
+    Extra small viewport tightening for 375/390/412 checks.
+  */
+  *[style*="padding: 24px"],
+  *[style*="padding:24px"],
+  *[style*="padding: 22px"],
+  *[style*="padding:22px"],
+  *[style*="padding: 20px"],
+  *[style*="padding:20px"] {
+    padding: 16px !important;
+  }
+
+  *[style*="gap: 20px"],
+  *[style*="gap:20px"],
+  *[style*="gap: 18px"],
+  *[style*="gap:18px"],
+  *[style*="gap: 16px"],
+  *[style*="gap:16px"] {
+    gap: 12px !important;
+  }
+}
