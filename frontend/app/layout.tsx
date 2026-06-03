@@ -1,3 +1,4 @@
+import "./globals.css";
 export const metadata = {
   title: "SecureTheCloud MCP Governance Lab",
   description: "Governed MCP access, policy, approval, and evidence lab platform"
